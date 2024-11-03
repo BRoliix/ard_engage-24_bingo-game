@@ -11,7 +11,7 @@ export async function GET() {
     return NextResponse.json({ 
       questions: questions 
     })
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Failed to load questions' },
       { status: 500 }
