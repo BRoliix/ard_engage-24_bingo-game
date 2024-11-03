@@ -13,7 +13,6 @@ export default function BingoGame() {
   const [questions, setQuestions] = useState<BingoQuestion[]>([]);
   const [selectedBoxes, setSelectedBoxes] = useState<Set<number>>(new Set());
   const [showBingoMessage, setShowBingoMessage] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     try {
@@ -30,10 +29,8 @@ export default function BingoGame() {
       
       setQuestions(shuffledQuestions);
       setSelectedBoxes(new Set([10]));
-      setIsLoading(false);
     } catch (_error) {
       console.error('Error loading questions:', _error);
-      setIsLoading(false);
     }
   }, []);
 
