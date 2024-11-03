@@ -31,8 +31,8 @@ export default function BingoGame() {
       setQuestions(shuffledQuestions);
       setSelectedBoxes(new Set([10]));
       setIsLoading(false);
-    } catch (error) {
-      console.error('Error loading questions:', error);
+    } catch (_error) {
+      console.error('Error loading questions:', _error);
       setIsLoading(false);
     }
   }, []);
@@ -78,7 +78,7 @@ export default function BingoGame() {
           <h1 className="text-2xl md:text-3xl font-bold">
             <span className="text-[#F3D77D]">Bingo</span>
             <span className="text-[#40E0D0]">of</span>
-            <span className="text-[#FF9E9E]">Engage'24</span>
+            <span className="text-[#FF9E9E]">Engage&apos;24</span>
           </h1>
           <Link 
             href="/"

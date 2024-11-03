@@ -47,7 +47,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-bold tracking-wide">
             <span className="text-[#F3D77D]">En</span>
             <span className="text-[#40E0D0]">gage</span>
-            <span className="text-[#FF9E9E]">'24</span>
+            <span className="text-[#FF9E9E]">&apos;24</span>
           </h1>
 
           <div className="mt-4 md:mt-6">
