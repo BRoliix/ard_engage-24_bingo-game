@@ -1,54 +1,69 @@
-import { MongoClient } from 'mongodb';
+import { promises as fs } from 'fs';
 import { NextResponse } from 'next/server';
+import path from 'path';
 
-const uri = process.env.MONGODB_URI!;
-let client: MongoClient | null = null;
-
-async function connectToDatabase() {
-  if (!client) {
-    client = new MongoClient(uri);
-    await client.connect();
-  }
-  return client;
+interface LeaderboardEntry {
+  name: string;
+  timestamp: string;
 }
 
 export async function GET() {
   try {
-    const client = await connectToDatabase();
-    const collection = client.db('bingo-game').collection('leaderboard');
+    // Ensure the data directory exists
+    const dataDir = path.join(process.cwd(), 'data');
+    const filePath = path.join(dataDir, 'leaderboard.json');
+
+    try {
+      await fs.access(dataDir);
+    } catch {
+      await fs.mkdir(dataDir, { recursive: true });
+      await fs.writeFile(filePath, '[]');
+    }
+
+    const fileData = await fs.readFile(filePath, 'utf8');
+    const leaderboard: LeaderboardEntry[] = JSON.parse(fileData);
     
-    const entries = await collection
-      .find({})
-      .sort({ timestamp: 1 })
-      .toArray();
-    
-    return NextResponse.json(entries);
+    return NextResponse.json(leaderboard);
   } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('Leaderboard GET error:', error);
+    return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const { name } = await request.json();
-    const client = await connectToDatabase();
-    const collection = client.db('bingo-game').collection('leaderboard');
-    
-    await collection.insertOne({
+    const { name, timestamp } = await request.json();
+    const dataDir = path.join(process.cwd(), 'data');
+    const filePath = path.join(dataDir, 'leaderboard.json');
+
+    // Ensure directory exists
+    try {
+      await fs.access(dataDir);
+    } catch {
+      await fs.mkdir(dataDir, { recursive: true });
+    }
+
+    // Read existing data or create new array
+    let leaderboard: LeaderboardEntry[] = [];
+    try {
+      const fileData = await fs.readFile(filePath, 'utf8');
+      leaderboard = JSON.parse(fileData);
+    } catch {
+      // If file doesn't exist, start with empty array
+    }
+
+    // Add new entry
+    leaderboard.push({
       name,
-      timestamp: new Date(),
+      timestamp: timestamp || new Date().toISOString()
     });
 
-    return NextResponse.json({ message: 'Winner recorded' }, { status: 201 });
+    // Write updated data
+    await fs.writeFile(filePath, JSON.stringify(leaderboard, null, 2));
+    
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Database error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('Leaderboard POST error:', error);
+    return NextResponse.json({ error: 'Failed to save data' }, { status: 500 });
   }
 }

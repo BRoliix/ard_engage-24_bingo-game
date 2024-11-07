@@ -6,7 +6,7 @@ import questionsData from '@/lib/questions_bingo.json';
 interface BingoQuestion {
   text: string;
   isSelected: boolean;
-  isFreeCell?: boolean; 
+  isFreeCell?: boolean;
 }
 
 export default function BingoGame() {
@@ -57,7 +57,8 @@ export default function BingoGame() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: playerName.trim()
+          name: playerName.trim(),
+          timestamp: new Date().toISOString()
         }),
       });
 
@@ -131,7 +132,6 @@ export default function BingoGame() {
           </div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1A1A1A]/50 to-[#1A1A1A]"></div>
         </div>
-
         <div className="relative z-10 min-h-screen flex items-center justify-center">
           <form 
             onSubmit={handleNameSubmit}
@@ -177,13 +177,13 @@ export default function BingoGame() {
             <span className="text-[#FF9E9E]">Engage&apos;24</span>
           </h1>
           <div className="flex items-center space-x-4">
-            <Link 
+            <Link
               href="/leader-board"
               className="text-[#40E0D0] hover:text-[#F3D77D] transition-colors duration-300"
             >
               Leaderboard
             </Link>
-            <Link 
+            <Link
               href="/"
               className="text-[#40E0D0] hover:text-[#F3D77D] transition-colors duration-300"
             >
@@ -209,8 +209,7 @@ export default function BingoGame() {
                   aspect-square rounded-lg md:rounded-xl
                   flex items-center justify-center
                   text-[0.65rem] sm:text-sm md:text-base
-                  font-medium
-                  p-1.5 md:p-3
+                  font-medium p-1.5 md:p-3
                   transition-all duration-300
                   ${question.isFreeCell 
                     ? 'bg-[#40E0D0]/30 text-white border-[#40E0D0] cursor-default' 
