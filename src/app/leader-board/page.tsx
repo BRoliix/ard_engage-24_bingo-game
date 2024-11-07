@@ -1,11 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-
-interface LeaderboardEntry {
-  name: string;
-  timestamp: string;
-}
+import { LeaderboardEntry } from '@/lib/store';
 
 export default function LeaderBoard() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
@@ -13,39 +9,29 @@ export default function LeaderBoard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    
     const fetchLeaderboard = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/leaderboard', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          cache: 'no-store',
-          next: { revalidate: 0 }
-        });
-    
+        const response = await fetch('/api/leaderboard');
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error('Failed to fetch leaderboard data');
         }
-        
         const data = await response.json();
-        if (!Array.isArray(data)) {
-          throw new Error('Invalid data format received');
-        }
-        
         setEntries(data);
-        setError(null);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
-        setError('Failed to load leaderboard data. Please try again later.');
+        setError('Failed to load leaderboard data');
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchLeaderboard();
+
+    // Set up polling to refresh the leaderboard
+    const intervalId = setInterval(fetchLeaderboard, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
@@ -67,7 +53,7 @@ export default function LeaderBoard() {
             <span className="text-[#F3D77D]">Bingo</span>
             <span className="text-[#40E0D0]"> Leaders</span>
           </h1>
-          <div className="flex items-center space-x-4">
+          <nav className="flex items-center space-x-4">
             <Link
               href="/bingo"
               className="text-[#40E0D0] hover:text-[#F3D77D] transition-colors duration-300"
@@ -80,7 +66,7 @@ export default function LeaderBoard() {
             >
               Home
             </Link>
-          </div>
+          </nav>
         </div>
       </header>
 
@@ -91,8 +77,14 @@ export default function LeaderBoard() {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#40E0D0]"></div>
           </div>
         ) : error ? (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-center text-red-300">
-            {error}
+          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-center">
+            <p className="text-red-300">{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-colors"
+            >
+              Try Again
+            </button>
           </div>
         ) : (
           <div className="bg-[#2A2A2A] rounded-xl p-6 shadow-lg border-2 border-[#40E0D0]/30">
@@ -146,24 +138,6 @@ export default function LeaderBoard() {
                 </table>
               </div>
             )}
-          </div>
-        )}
-
-        {/* Quick Stats */}
-        {entries.length > 0 && (
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#2A2A2A] rounded-xl p-4 border border-[#40E0D0]/30">
-              <h3 className="text-[#40E0D0] text-sm font-medium">Total Winners</h3>
-              <p className="text-2xl font-bold text-white mt-1">{entries.length}</p>
-            </div>
-            <div className="bg-[#2A2A2A] rounded-xl p-4 border border-[#40E0D0]/30">
-              <h3 className="text-[#40E0D0] text-sm font-medium">Latest Winner</h3>
-              <p className="text-2xl font-bold text-white mt-1">{entries[0]?.name || 'N/A'}</p>
-            </div>
-            <div className="bg-[#2A2A2A] rounded-xl p-4 border border-[#40E0D0]/30">
-              <h3 className="text-[#40E0D0] text-sm font-medium">First Winner</h3>
-              <p className="text-2xl font-bold text-white mt-1">{entries[entries.length - 1]?.name || 'N/A'}</p>
-            </div>
           </div>
         )}
       </main>
