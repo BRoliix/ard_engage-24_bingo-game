@@ -21,15 +21,24 @@ export default function LeaderBoard() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch('/api/leaderboard');
+  
+      const baseUrl =
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:3000'
+          : 'https://ard-engage-game.vercel.app'; 
+  
+      const response = await fetch(`${baseUrl}/api/leaderboard`);
+      
       if (!response.ok) {
         throw new Error('Failed to fetch leaderboard');
       }
+  
       const data = await response.json();
-      // Sort by timestamp
-      const sortedData = data.sort((a: LeaderboardEntry, b: LeaderboardEntry) => 
+      
+      const sortedData = data.sort((a: LeaderboardEntry, b: LeaderboardEntry) =>
         new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
       );
+      
       setLeaderboard(sortedData);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
