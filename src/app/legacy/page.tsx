@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-export default function LegacyPage() {
+export default function Page(): JSX.Element {
   const [isClearing, setIsClearing] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -19,11 +19,19 @@ export default function LegacyPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to clear leaderboard');
+        setMessage('Failed to clear leaderboard. Please try again.');
+        return;
       }
 
       setMessage('Leaderboard cleared successfully!');
-    } catch (error) {
+      
+      // Optional: Add a small delay before redirecting
+      setTimeout(() => {
+        window.location.href = '/leader-board';
+      }, 2000);
+
+    } catch {
+      // Removed unused error parameter
       setMessage('Failed to clear leaderboard. Please try again.');
     } finally {
       setIsClearing(false);
@@ -75,7 +83,7 @@ export default function LegacyPage() {
             <div className="bg-[#1A1A1A] rounded-lg p-6 border border-[#40E0D0]/20">
               <h3 className="text-xl text-[#F3D77D] mb-4">Clear Leaderboard</h3>
               <p className="text-gray-400 mb-4">
-                This action will remove all entries from the leaderboard. This cannot be undone.
+                Warning: This action will remove all entries from the leaderboard. This cannot be undone.
               </p>
               <button
                 onClick={handleClearLeaderboard}
@@ -93,11 +101,13 @@ export default function LegacyPage() {
             </div>
 
             {message && (
-              <div className={`rounded-lg p-4 ${
-                message.includes('success') 
-                  ? 'bg-green-500/10 border border-green-500/30 text-green-300'
-                  : 'bg-red-500/10 border border-red-500/30 text-red-300'
-              }`}>
+              <div 
+                className={`rounded-lg p-4 ${
+                  message.includes('success') 
+                    ? 'bg-green-500/10 border border-green-500/30 text-green-300'
+                    : 'bg-red-500/10 border border-red-500/30 text-red-300'
+                }`}
+              >
                 {message}
               </div>
             )}
