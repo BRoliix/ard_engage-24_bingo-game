@@ -9,12 +9,6 @@ interface BingoQuestion {
   isFreeCell?: boolean; 
 }
 
-interface LeaderboardEntry {
-  _id?: string;
-  name: string;
-  timestamp: string;
-}
-
 export default function BingoGame() {
   const [questions, setQuestions] = useState<BingoQuestion[]>([]);
   const [selectedBoxes, setSelectedBoxes] = useState<Set<number>>(new Set());
