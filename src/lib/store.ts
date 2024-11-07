@@ -3,9 +3,10 @@ export interface LeaderboardEntry {
     timestamp: string;
   }
   
-  // In-memory storage
-  let leaderboardStore: LeaderboardEntry[] = [];
+  // Use const instead of let for the store
+  export const leaderboardStore: LeaderboardEntry[] = [];
   
+  // Add entry function
   export const addEntry = (name: string): void => {
     leaderboardStore.unshift({
       name,
@@ -13,8 +14,7 @@ export interface LeaderboardEntry {
     });
   };
   
+  // Get entries function
   export const getEntries = (): LeaderboardEntry[] => {
-    return leaderboardStore;
+    return [...leaderboardStore];
   };
-  
-  export { leaderboardStore };

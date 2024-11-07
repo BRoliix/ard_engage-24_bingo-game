@@ -8,22 +8,24 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { name } = await request.json();
-    if (!name) {
+    
+    if (!name || typeof name !== 'string') {
       return NextResponse.json(
-        { error: 'Name is required' }, 
+        { error: 'Invalid name provided' },
         { status: 400 }
       );
     }
-    
+
     addEntry(name.trim());
-    return NextResponse.json({ 
+    
+    return NextResponse.json({
       success: true,
-      message: 'Entry added successfully'
+      message: 'Entry added successfully',
+      entries: leaderboardStore
     });
   } catch {
-    // Remove unused error parameter
     return NextResponse.json(
-      { error: 'Failed to save data' }, 
+      { error: 'Failed to save data' },
       { status: 500 }
     );
   }
