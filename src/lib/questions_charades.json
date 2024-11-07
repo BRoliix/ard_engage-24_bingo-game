@@ -1,19 +1,30 @@
 {
-  "prompts": [
-    "Act out how you got rid of RC ",
-    "Some one saying international exposure as a reaosn to come to UNI",
-    "Act out a typical scene at the Food Court",
-    "Treble",
-    "Intro",
-    "Imitate Rafi sir",
-    "Demonstrate your laundry struggles",
-    "Waking up when class starts",
-    "Act out ordering and eating the famous Chicken Munna Bhai sandwich",
-    "Perform a typical library group study session",
-    "Act out a college birthday celebration with friends",
-    "Demonstrate sneaking into the hostel after hours",
-    "Surprise test announcement",
-    "Cheating in exams",
-    "Act out an ice breaking session "
-  ]
+  "movies": {
+      "questions": [
+          "⁠Rang De Basanti. 2006",
+          "Phir Hera Pheri", 
+          "Golmaal",
+          "⁠Pirates of the Caribbean",
+          "Jab we met",
+          "X-Men",
+          "Bhool Bhulaiyaa",
+          "3 Idiots",
+          "Singham",
+          "Rockstar"
+      ]
+  },
+  "songs": {
+      "questions": [
+          "Hips don't Lie",
+          "on the floo",
+          "⁠Pay Phone",
+          "⁠Gangam style",
+          "⁠Waka waka",
+          "⁠dhinka chika",
+          "Pappu cant dance",
+          "Badtameez Di",
+          "⁠Tauba Tauba",
+          "⁠Balam Pichkari"
+      ]
+  }
 }
