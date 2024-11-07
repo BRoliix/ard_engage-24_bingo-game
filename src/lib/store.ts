@@ -7,7 +7,7 @@ export interface LeaderboardEntry {
   export const leaderboardStore: LeaderboardEntry[] = [];
   
   // Add entry function
-  export const addEntry = (name: string) => {
+  export const addEntry = (name: string): void => {
     leaderboardStore.unshift({
       name,
       timestamp: new Date().toISOString()
@@ -15,6 +15,6 @@ export interface LeaderboardEntry {
   };
   
   // Get entries function
-  export const getEntries = () => {
+  export const getEntries = (): LeaderboardEntry[] => {
     return [...leaderboardStore];
   };
