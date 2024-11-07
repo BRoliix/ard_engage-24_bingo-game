@@ -1,9 +1,14 @@
 'use client';
+import React from 'react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { LeaderboardEntry } from '@/lib/store';
 
-export default function LeaderBoard() {
+interface LeaderboardEntry {
+  name: string;
+  timestamp: string;
+}
+
+export default function LeaderboardPage(): React.JSX.Element {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -12,12 +17,20 @@ export default function LeaderBoard() {
     const fetchLeaderboard = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/leaderboard');
+        const response = await fetch('/api/leaderboard', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          cache: 'no-store'
+        });
+
         if (!response.ok) {
           throw new Error('Failed to fetch leaderboard data');
         }
+        
         const data = await response.json();
-        setEntries(data);
+        setEntries(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
         setError('Failed to load leaderboard data');
@@ -27,10 +40,7 @@ export default function LeaderBoard() {
     };
 
     fetchLeaderboard();
-
-    // Set up polling to refresh the leaderboard
-    const intervalId = setInterval(fetchLeaderboard, 5000); // Poll every 5 seconds
-
+    const intervalId = setInterval(fetchLeaderboard, 5000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -72,19 +82,13 @@ export default function LeaderBoard() {
 
       {/* Main Content */}
       <main className="relative z-10 pt-24 px-4 max-w-4xl mx-auto">
-        {isLoading ? (
+        {isLoading && entries.length === 0 ? (
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#40E0D0]"></div>
           </div>
         ) : error ? (
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-center">
             <p className="text-red-300">{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-colors"
-            >
-              Try Again
-            </button>
           </div>
         ) : (
           <div className="bg-[#2A2A2A] rounded-xl p-6 shadow-lg border-2 border-[#40E0D0]/30">
