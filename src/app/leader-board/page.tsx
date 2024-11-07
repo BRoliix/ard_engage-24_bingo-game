@@ -30,7 +30,11 @@ export default function LeaderboardPage(): React.JSX.Element {
         }
         
         const data = await response.json();
-        setEntries(Array.isArray(data) ? data : []);
+        // Sort entries by timestamp in ascending order (oldest first)
+        const sortedEntries = Array.isArray(data) 
+          ? [...data].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+          : [];
+        setEntries(sortedEntries);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
         setError('Failed to load leaderboard data');
@@ -114,7 +118,8 @@ export default function LeaderboardPage(): React.JSX.Element {
                       return (
                         <tr 
                           key={index} 
-                          className="border-b border-[#40E0D0]/10 text-white hover:bg-[#40E0D0]/5 transition-colors"
+                          className={`border-b border-[#40E0D0]/10 text-white hover:bg-[#40E0D0]/5 transition-colors
+                            ${index === 0 ? 'bg-[#F3D77D]/10' : ''}`}
                         >
                           <td className="py-3 px-4 text-[#F3D77D]">
                             {index + 1}

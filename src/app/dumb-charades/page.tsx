@@ -15,7 +15,21 @@ export default function DumbCharades() {
   const [isRevealed, setIsRevealed] = useState(false);
   const [showGenreSelection, setShowGenreSelection] = useState(true);
 
+  const resetPromptsIfNeeded = () => {
+    const allUsed = Object.entries(usedPrompts).every(
+      ([genre, used]) => used.size === charadesData[genre as Genre].questions.length
+    );
+    
+    if (allUsed) {
+      setUsedPrompts({
+        movies: new Set(),
+        songs: new Set(),
+      });
+    }
+  };
+
   const selectGenre = (genre: Genre) => {
+    resetPromptsIfNeeded();
     setSelectedGenre(genre);
     setShowGenreSelection(false);
     getRandomPrompt(genre);
@@ -30,7 +44,7 @@ export default function DumbCharades() {
     );
 
     if (availablePrompts.length === 0) {
-      setCurrentPrompt(`No more prompts available in ${genre} category!`);
+      setCurrentPrompt(`No more prompts available in ${genre} category! Choose another genre.`);
       return;
     }
 
@@ -50,6 +64,7 @@ export default function DumbCharades() {
     setIsRevealed(false);
     setSelectedGenre(null);
   };
+
 
   return (
     <div className="min-h-screen bg-[#1A1A1A] relative overflow-hidden">
