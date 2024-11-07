@@ -60,12 +60,20 @@ export default function Home() {
             <p className="text-2xl md:text-3xl font-bold text-[#F3D77D]">BPDC AUDITORIUM</p>
           </div>
 
-          <Link 
-            href="/bingo"
-            className="inline-block mt-6 md:mt-8 px-8 md:px-12 py-3 md:py-4 bg-[#40E0D0] text-[#1A1A1A] text-lg md:text-xl font-bold rounded-lg hover:bg-[#F3D77D] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[#40E0D0]/20"
-          >
-            Play Bingo
-          </Link>
+          <div className="flex space-x-4">
+            <Link 
+              href="/bingo"
+              className="inline-block mt-6 md:mt-8 px-8 md:px-12 py-3 md:py-4 bg-[#40E0D0] text-[#1A1A1A] text-lg md:text-xl font-bold rounded-lg hover:bg-[#F3D77D] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[#40E0D0]/20"
+            >
+              Play Bingo
+            </Link>
+            <Link 
+              href="/dumb-charades"
+              className="inline-block mt-6 md:mt-8 px-8 md:px-12 py-3 md:py-4 bg-[#40E0D0] text-[#1A1A1A] text-lg md:text-xl font-bold rounded-lg hover:bg-[#F3D77D] transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[#40E0D0]/20"
+            >
+              Play Charades
+            </Link>
+          </div>
         </div>
       </div>
     </div>
