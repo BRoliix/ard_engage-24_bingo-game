@@ -20,7 +20,8 @@ export async function POST(request: Request) {
     
     return NextResponse.json({
       success: true,
-      message: 'Entry added successfully'
+      message: 'Entry added successfully',
+      entries: leaderboardStore
     });
   } catch {
     return NextResponse.json(
